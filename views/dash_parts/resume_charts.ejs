@@ -1,0 +1,263 @@
+<div class="row">
+
+    <!-- Sales per Customer -->
+    <div class="col-xl-5 col-sm-6 col-12 mb-4">
+        <div class="card">
+            <div class="card-body text-center mb-0 text-muted">
+                <div>
+                    <h6 class="card-title mb-0"> Compras por Cliente </h6>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <canvas id="sales_circular_chart"></canvas>
+                </div>
+            </div>
+            <div class="text-muted" style="font-size: xx-small; margin-left: 10%; padding: 21px;">
+                <b>Número de compras</b> têm <b>cores mais intensas</b>
+                <br>
+                <b>Número de produtos comprados</b> têm <b>cores menos intensas</b>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sales por Month -->
+    <div class="col-xl-7 col-sm-6 col-12 mb-4">
+        <div class="card">
+            <div class="card-body text-center mb-0 text-muted">
+                <div>
+                    <h6 class="card-title mb-0"> Compras por mês  </h6>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between px-md-1">
+                    <canvas id="sales_month_chart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script id="script_sales_circular_chart">
+
+    let labels_SpC = [];
+    let data_sales = [];
+    let data_products = [];
+    <% miniCharts.profitByCustomerByProduct.forEach(function (item) { %>
+        labels_SpC.push('<%= item.info.CustomerName %>');
+        data_sales.push('<%= item.resume.CustomerSales %>');
+        data_products.push('<%= item.products.reduce((total, product) => total + product.resume.ProductQuantity, 0) %>');
+    <% }); %>
+
+    // Sales chart
+    var ctx_SpC = document.getElementById("sales_circular_chart").getContext('2d');
+    var SalesPerCustomer = new Chart(ctx_SpC, {
+        type: 'doughnut',
+        data: {
+            labels: labels_SpC,
+            datasets: [
+                {
+                    label: 'Compras',
+                    data: data_sales,
+                    backgroundColor: [
+                        'rgba(247, 70, 79)',
+                        'rgba(70, 191, 187)',
+                        'rgba(253, 180, 92)',
+                        'rgba(148, 159, 177)',
+                        'rgba(77, 83, 96)',
+                    ],
+                },
+                {
+                    label: 'Produtos',
+                    data: data_products,
+                    backgroundColor: [
+                        'rgba(247, 70, 79, .5)',
+                        'rgba(70, 191, 187, .5)',
+                        'rgba(253, 180, 92, .5)',
+                        'rgba(148, 159, 177, .5)',
+                        'rgba(77, 83, 96, .5)',
+                    ],
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            legend: {
+                position: 'right',
+                labels: {
+                    padding: 20,
+                    boxWidth: 10
+                }
+            },
+        }
+    });
+</script>
+
+<script id="script_sales_month_chart">
+    const months_list = [
+        "Janeiro",
+        "Fevereiro",
+        "Março",
+        "Abril",
+        "Maio",
+        "Junho",
+        "Julho",
+        "Agosto",
+        "Setembro",
+        "Outubro",
+        "Novembro",
+        "Dezembro"
+    ];
+
+    let labels_SM = [];
+    let total_sales = [];
+    let total_produtcs = [];
+
+    // Total
+    <% miniCharts.salesMonthly.forEach(function (item) { %>
+        labels_SM.push(months_list[<%= item.month %> - 1]);
+
+        total_sales.push('<%= item.sales %>');
+        total_produtcs.push('<%= item.products %>');
+    <% }); %>
+
+        // Average
+        let average_sales = [];
+    let average_products = [];
+    <% miniCharts.salesMonthlyCumulative.forEach(function (item) { %>
+        average_sales.push('<%= Math.ceil(item.cumulative_sales / item.month) %>');
+        average_products.push('<%= Math.ceil(item.cumulative_products / item.month).toPrecision(1) %>');
+
+    <% }); %>
+
+        console.log(average_sales);
+    console.log(average_products);
+
+    /*
+    *  Chart Gross Billed
+    */
+    var cl_SM = document.getElementById("sales_month_chart").getContext('2d');
+    var SalesMonthly_Bar = new Chart(cl_SM, {
+        type: 'bar',
+        data: {
+            labels: labels_SM,
+            datasets: [{
+                label: '#Compras',
+                data: total_sales,
+                backgroundColor: [
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                ],
+                borderWidth: 1
+            },
+            {
+                label: '#Produtos',
+                data: total_produtcs,
+                backgroundColor: [
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+
+                ],
+                borderColor: [
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(255, 159, 64, 1)',
+                ],
+                borderWidth: 1
+            },
+            {
+                label: '#compras média',
+                type: 'line',
+                data: average_sales,
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 2,
+                fill: false
+            },
+            {
+                label: '#produtos média',
+                type: 'line',
+                data: average_products,
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 2,
+                fill: false
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                xAxes: [{
+                    scalesLabel: {
+                        labelString: 'meses',
+                        display: true,
+                    }
+                }],
+                yAxes: [{
+                    scaleLabel: {
+                        labelString: 'quantidade',
+                        display: true
+                    },
+                    ticks: {
+                        beginAtZero: true,
+                        stepSize: 1
+                    }
+
+                }]
+            },
+            legend: {
+                display: true,
+                position: 'right',
+                labels: {
+                    fontColor: '#333',
+                    fontSize: 10,
+                    boxWidth: 10,
+                    padding: 10,
+                }
+            },
+        }
+    });
+
+
+</script>

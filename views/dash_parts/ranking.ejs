@@ -1,0 +1,220 @@
+<div class="row">
+    <!-- products -->
+    <div class="col-xl-6 col-sm-6 col-12 mb-4">
+        <div class="card">
+            <div class="card-body text-center mb-0 text-muted">
+                <div>
+                    <h6 class="card-title mb-0">Ranking de Produtos</h6>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <canvas id="ranking_products"></canvas>
+                </div>
+                <div class="mt-3" style="display: flex; justify-content: center; align-items: center;">
+                    <p>
+                    <div style="font-size: xx-large; font-weight: 700;">
+                        <%= ranking.products.reduce((total, product)=> total + product.resume.ProductProfit,
+                            0).toFixed(2) %>€
+                    </div> / <%= blocks.profit_total.toFixed(2) %>€
+
+                        </p>
+                </div>
+                <div style="display: flex; justify-content: center; align-items: center;">
+                    <small class="text-muted">
+                        (<%= ((ranking.products.reduce((total, product)=> total + product.resume.ProductProfit,
+                        0).toFixed(2) / blocks.profit_total.toFixed(2))*100).toFixed(2)
+                            %>%)
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- customers -->
+    <div class="col-xl-6 col-sm-6 col-12 mb-4">
+        <div class="card">
+            <div class="card-body text-center mb-0 text-muted">
+                <div>
+                    <h6 class="card-title mb-0">Ranking de Clientes</h6>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between px-md-1">
+                    <canvas id="ranking_customers"></canvas>
+                </div>
+                <div class="mt-3" style="display: flex; justify-content: center; align-items: center;">
+                    <p>
+                    <div style="font-size: xx-large; font-weight: 700;">
+                        <%= ranking.customers.reduce((total, customer)=> total + customer.resume.profit, 0).toFixed(2)
+                            %>€
+                    </div>
+                    / <%= blocks.profit_total.toFixed(2) %>€
+                        </p>
+                </div>
+                <div style="display: flex; justify-content: center; align-items: center;">
+                    <small class="text-muted">
+                        (<%= ((ranking.customers.reduce((total, customer)=> total +
+                            customer.resume.profit, 0).toFixed(2) / blocks.profit_total.toFixed(2))*100).toFixed(2)
+                            %>%)
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script id="script_ranking_products">
+
+    let labels_values = [];
+    let data_values = [];
+    let codes = [];
+    <% ranking.products.forEach(function (item) { %>
+        labels_values.push('<%= item.info.ProductDescription %>');
+        data_values.push('<%= item.resume.ProductProfit.toFixed(2) %>');
+        codes.push('<%= item.info.ProductCode %>');
+    <% }); %>
+
+    var ctx = document.getElementById('ranking_products').getContext('2d');
+    var products_HB = new Chart(ctx, {
+        type: "horizontalBar",
+        data: {
+            labels: labels_values,
+            datasets: [{
+                label: "lucro",
+                data: data_values,
+                fill: false,
+                backgroundColor: [
+                    "rgba(255, 99, 132, 0.2)",
+                    "rgba(255, 99, 132, 0.2)",
+                    "rgba(255, 99, 132, 0.2)",
+                    "rgba(255, 99, 132, 0.2)",
+                    "rgba(255, 99, 132, 0.2)"
+                ],
+                borderColor: [
+                    "rgb(255, 99, 132)",
+                    "rgb(255, 99, 132)",
+                    "rgb(255, 99, 132)",
+                    "rgb(255, 99, 132)",
+                    "rgb(255, 99, 132)",
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            title: {
+                text: "5 produtos mais vendidos e mais lucrativos",
+                display: true
+            },
+            scales: {
+                xAxes: [{
+                    ticks: {
+                        userCallback: function (tick) {
+                            return tick.toFixed(2) + "€";
+                        }
+                    },
+                    scaleLabel: {
+                        labelString: 'valor monetário do lucro',
+                        display: true
+                    }
+                }],
+                yAxes: [{
+                    ticks: {
+                        userCallback: function (tick) {
+                            index = labels_values.indexOf(tick);
+                            return codes[index];
+                        }
+                    },
+                    scaleLabel: {
+                        labelString: 'produto',
+                        display: true
+                    }
+                }]
+            },
+            legend: {
+                display: false
+            },
+        }
+    });
+
+</script>
+
+<script id="script_ranking_customers">
+
+    let labels_values_c = [];
+    let data_values_c = [];
+    let taxId = [];
+    <% ranking.customers.forEach(function (item) { %>
+        console.log('<%= item.CompanyName %>');
+        labels_values_c.push('<%= item.CompanyName %>');
+        data_values_c.push('<%= item.resume.profit.toFixed(2) %>');
+        taxId.push('<%= item.CustomerTaxID %>');
+    <% }); %>
+
+    var ctx = document.getElementById('ranking_customers').getContext('2d');
+    var products_HB = new Chart(ctx, {
+        type: "horizontalBar",
+        data: {
+            labels: labels_values_c,
+            datasets: [{
+                label: "lucro",
+                data: data_values_c,
+                fill: false,
+                backgroundColor: [
+                    "rgba(75, 192, 192, 0.2)",
+                    "rgba(75, 192, 192, 0.2)",
+                    "rgba(75, 192, 192, 0.2)",
+                    "rgba(75, 192, 192, 0.2)",
+                    "rgba(75, 192, 192, 0.2)",
+                ],
+                borderColor: [
+                    "rgba(75, 192, 192)",
+                    "rgba(75, 192, 192)",
+                    "rgba(75, 192, 192)",
+                    "rgba(75, 192, 192)",
+                    "rgba(75, 192, 192)",
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            title: {
+                text: "5 clientes mais lucrativos ",
+                display: true
+            },
+            scales: {
+                xAxes: [{
+                    ticks: {
+                        userCallback: function (tick) {
+                            return tick.toFixed(2) + "€";
+                        }
+                    },
+                    scaleLabel: {
+                        labelString: 'valor monetário do lucro',
+                        display: true
+                    }
+                }],
+                yAxes: [{
+
+                    ticks: {
+                        userCallback: function (tick) {
+                            index = labels_values_c.indexOf(tick);
+                            return taxId[index];
+                        }
+                    },
+
+                    scaleLabel: {
+                        labelString: 'cliente',
+                        display: true
+                    }
+                }]
+            },
+            legend: {
+                display: false
+            },
+        }
+    });
+
+</script>

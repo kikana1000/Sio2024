@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Produtos</title>
+    <link rel="stylesheet" href="/stylesheets/header.css">
+    <link rel="icon" href="/images/wokyera_logo.jpg">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"
+        integrity="sha512-d9xgZrVZpmmQlfonhQUvTR7lMPtO7NkZMkA0ABN3PHCbKA5nqylQ/yWlFAyY6hYgdF1Qh6nYiuADWwKB4C2WSw=="
+        crossorigin="anonymous"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.0/mdb.min.css" rel="stylesheet" />
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.0/mdb.min.js"></script>
+    <style>
+        .card-header {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .card-body h5 {
+            font-size: 24px;
+        }
+
+        #salesChart {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('../__header_geral') %>
+
+        <% if(processed) { %>
+            <div class="container mt-3" id="fiscal_year">
+                <small>Ano Fiscal <b>
+                        <%= fiscal_year %>
+                    </b> </small>
+            </div>
+            <% } %>
+
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-11">
+                            <h1 class="mt-3">Produtos</h1>
+                        </div>
+                        <% if(processed) { %>
+                            <div class="col-auto mt-3">
+                                <%- include('legend') %>
+                            </div>
+                            <% } %>
+                    </div>
+
+                    
+                        <div style="display: flex; justify-content: center;">
+                            <div class="col-xl-4 col-sm-6 col-12 mb-4 mt-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between px-md-1">
+                                            <div>
+                                                <h3 class="text-info">
+                                                    <% if(processed) { %>
+                                                        <%= products.reduce((total, product) => total + product.resume.ProductQuantity, 0) %>
+                                                    <% } else if(!processed) { %>
+                                                        <%= products.length %>
+                                                    <% } %>
+                                                </h3>
+                                                <p class="mb-0">Produtos</p>
+                                            </div>
+                                            <div class="align-self-center">
+                                                <i class="fas fa-barcode text-info fa-3x"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                            <ul class="list-group mt-4 mb-4">
+                                <% products.forEach(function(product) { %>
+                                    <li class="list-group-item">
+                                        <div class="row p-3"
+                                            style="background-color:powderblue; display: flex; align-items: center;">
+                                            <!-- Info de produtos processados -->
+                                            <% if(processed) { %>
+                                                <div class="col-md-1 text-center">
+                                                    <span class="badge badge-info">
+                                                        <%= product.info.ProductType %>
+                                                    </span>
+                                                </div>
+                                                <div class="col-md-2 text-center">
+                                                    <span class="badge badge-secondary">
+                                                        <%= product.info.ProductCode %>
+                                                    </span>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <b>
+                                                        <%= product.info.ProductDescription %>
+                                                    </b>
+                                                </div>
+                                                <!-- Info de produtos não processados -->
+                                                <% } else if(!processed) { %>
+                                                    <div class="col-md-1 text-center">
+                                                        <span class="badge badge-info">
+                                                            <%= product.ProductType %>
+                                                        </span>
+                                                    </div>
+                                                    <div class="col-md-2 text-center">
+                                                        <span class="badge badge-secondary">
+                                                            <%= product.ProductCode %>
+                                                        </span>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <b>
+                                                            <%= product.ProductDescription %>
+                                                        </b>
+                                                    </div>
+                                                    <% } %>
+                                        </div>
+                                        <% if(processed) { %>
+                                            <div class="row">
+                                                <!-- Tabela com infos -->
+                                                <div class="col-md-6">
+                                                    <h6 class="mt-3">Informações</h6>
+                                                    <table class="table align-middle mb-3 bg-white text-center">
+                                                        <thead class="bg-light">
+                                                            <tr>
+                                                                <th scope="col">PVP</th>
+                                                                <th scope="col">IVA%</th>
+                                                                <th scope="col">PU</th>
+                                                                <th scope="col">PC</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>
+                                                                    <%= product.price.ProductPVP.toFixed(2) %>€
+                                                                </td>
+                                                                <td>
+                                                                    <% if(product.price.ProductTaxValue == 6 ) { %>
+                                                                        <span class="badge badge-success">
+                                                                            6%
+                                                                        </span>
+                                                                        <% } else if(product.price.ProductTaxValue == 13
+                                                                            ) { %>
+                                                                            <span class="badge badge-warning">
+                                                                                13%
+                                                                            </span>
+                                                                            <% } else
+                                                                                if(product.price.ProductTaxValue == 0 )
+                                                                                { %>
+                                                                                <span class="badge badge-dander">
+                                                                                    0%
+                                                                                </span>
+                                                                                <% } else
+                                                                                    if(product.price.ProductTaxValue == 23
+                                                                                    ) { %>
+                                                                                    <span class="badge badge-dark">
+                                                                                        23%
+                                                                                    </span>
+                                                                                    <% } %>
+
+                                                                </td>
+                                                                <td>
+                                                                    <%= product.price.ProductPU.toFixed(2) %>€
+                                                                </td>
+                                                                <td>
+                                                                    <%= product.price.ProductPC %>€
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <!-- Tabela com calculos -->
+                                                <div class="col-md-6">
+                                                    <h6 class="mt-3">Resumo</h6>
+                                                    <table class="table align-middle mb-3 bg-white text-center">
+                                                        <thead class="bg-light">
+                                                            <tr>
+                                                                <th scope="col">Vendas</th>
+                                                                <th scope="col">Quantidade</th>
+                                                                <th scope="col">IVA</th>
+                                                                <th scope="col">Lucro</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>
+                                                                    <%= product.resume.ProductBilled.toFixed(2) %>€
+                                                                </td>
+                                                                <td>
+                                                                    <%= product.resume.ProductQuantity %>
+                                                                </td>
+                                                                <td>
+                                                                    <%= product.resume.ProductIVA.toFixed(2) %>€
+                                                                </td>
+                                                                <td>
+                                                                    <%= product.resume.ProductProfit.toFixed(2) %>€
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <% } else { %>
+                                                <div class="row">
+                                                    <!-- Tabela com infos -->
+                                                    <div class="col">
+                                                        <h6 class="mt-3">Informações</h6>
+                                                        <table class="table align-middle mb-3 bg-white text-center">
+                                                            <thead class="bg-light">
+                                                                <tr>
+                                                                    <th scope="col">PVP</th>
+                                                                    <th scope="col">IVA%</th>
+                                                                    <th scope="col">PU</th>
+                                                                    <th scope="col">PC</th>
+                                                                    <th scope="col">Margem Lucro</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td>
+                                                                        <%= product.sales_price.toFixed(2) %>€
+                                                                    </td>
+                                                                    <td>
+                                                                        <% if(product.tax_code=='RED' ) { %>
+                                                                            <span class="badge badge-success">
+                                                                                6%
+                                                                            </span>
+                                                                            <% } else if(product.tax_code=='INT' ) { %>
+                                                                                <span class="badge badge-warning">
+                                                                                    13%
+                                                                                </span>
+                                                                                <% } else if(product.tax_code=='ISE' ) {
+                                                                                    %>
+                                                                                    <span class="badge badge-dander">
+                                                                                        0%
+                                                                                    </span>
+                                                                                    <% } else if(product.tax_code=='NOR'
+                                                                                        ) { %>
+                                                                                        <span class="badge badge-dark">
+                                                                                            23%
+                                                                                        </span>
+                                                                                        <% } else
+                                                                                            if(product.tax_code=='NaN' )
+                                                                                            { %>
+                                                                                            NaN
+                                                                                            <% } %>
+
+                                                                    </td>
+                                                                    <td>
+                                                                        <%= product.sales_price_vat_display.toFixed(2)
+                                                                            %>€
+                                                                    </td>
+                                                                    <td>
+                                                                        <%= product.purchase_price.toFixed(2) %>€
+                                                                    </td>
+                                                                    <td>
+                                                                        <%= (product.sales_price_vat_display-product.purchase_price).toFixed(2)
+                                                                            %>€
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <% }; %>
+                                    </li>
+                                    <% }); %>
+                            </ul>
+                </div>
+
+                <div class="footer"><%- include('../__footer') %></div>
+                
+</body>
+
+</html>

@@ -1,0 +1,53 @@
+<div class="row">
+    <h5>Quadro Resumo</h5>
+</div>
+
+<div class="row">
+
+    <!-- Table resume -->
+    <table class="table table-striped">
+
+        <thead>
+            <tr>
+                <th scope="col" class="col-md-8"> </th>
+                <th scope="col" class="col-md-4 text-center">TOTAL</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td> Valor de faturação <b>BRUTO</b> </td>
+                <td class="text-center"> <%= billed.toFixed(2) %>€ </td>
+            </tr>
+            <tr>
+                <td> Valor de faturação <b>LÍQUIDO</b> </td>
+                <td class="text-center"> <%= (billed-iva).toFixed(2) %>€ </td>
+            </tr>
+            <tr>
+                <td> Total de IVA cobrado </td>
+                <td class="text-center"> <%= (iva).toFixed(2) %>€ </td>
+            </tr>
+            <tr>
+                <td> Lucro </td>
+                <td class="text-center"> 
+                    <%= profit.toFixed(2) %>€ <small><b>(c/ IVA)</b></small> <br>
+                    <%= (profit-iva).toFixed(2) %>€ <small><b>(s/ IVA)</b></small> 
+                </td>
+            </tr>
+            <tr>
+                <td> Vendas </td>
+                <td class="text-center"> <%= sales %> </td>
+            </tr>
+            <tr>
+                <td> Clientes fizeram compras </td>
+                <td class="text-center"> <%= customers_billed %> </td>
+            </tr>
+            <tr>
+                <td> Produtos comprados </td>
+                <td class="text-center"> <%= products_billed %> </td>
+            </tr>
+        </tbody>
+
+    </table>
+
+</div>

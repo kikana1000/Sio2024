@@ -1,0 +1,117 @@
+<style>
+    #resume_table td{
+        text-align: center;
+    }
+</style>
+
+<div class="row">
+    <div class="col-xl-12 col-sm-6 col-12 mb-4">
+        <div class="card">
+            <div class="card-header mb-0 ">
+                <div>
+                    <h6 class="card-title mb-0"> Resumo </h6>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between px-md-1">
+
+                    <table class="table table-hover" id="resume_table">
+                        <tbody>
+
+                            <!-- Sales -->
+                            <tr>
+                                <th scope="row">Total de vendas efetuadas</th>
+                                <td>
+                                    <%= blocks.sales_total %>
+                                </td>
+                            </tr>
+
+                            <!-- Customers -->
+                            <tr>
+                                <th scope="row">Número de Clientes alcançados</th>
+                                <td>
+                                    <%= blocks.customers_billed %>
+                                </td>
+                            </tr>
+
+                            <!-- Products -->
+                            <tr>
+                                <th scope="row">Número de Produtos vendidos</th>
+                                <td>
+                                    <%= blocks.products_billed %>
+                                </td>
+                            </tr>
+
+                            <!-- Faturação Bruta : total -->
+                            <tr>
+                                <th scope="row">Faturação Bruta : total</th>
+                                <td>
+                                    <%= blocks.gross_total.toFixed(2) %>€
+                                </td>
+                            </tr>
+
+                            <!-- Faturação Bruta : média -->
+                            <tr>
+                                <th scope="row">Faturação Bruta : média</th>
+                                <td>
+                                    <%= (blocks.gross_total/blocks.sales_total).toFixed(2) %>€
+                                </td>
+                            </tr>
+
+                            <!-- Faturação Líquida : total -->
+                            <tr>
+                                <th scope="row">Faturação Líquida : total</th>
+                                <td>
+                                    <%= (blocks.gross_total-blocks.iva_total).toFixed(2) %>€
+                                </td>
+                            </tr>
+
+                            <!-- Faturação Líquida : média -->
+                            <tr>
+                                <th scope="row">Faturação Líquida : média</th>
+                                <td>
+                                    <%= ((blocks.gross_total-blocks.iva_total)/blocks.sales_total).toFixed(2) %>€
+                                </td>
+                            </tr>
+
+                            <!-- IVA faturado : total -->
+                            <tr>
+                                <th scope="row">IVA faturado : total</th>
+                                <td>
+                                    <%= (blocks.iva_total).toFixed(2) %>€
+                                </td>
+                            </tr>
+
+                            <!-- IVA faturado : média -->
+                            <tr>
+                                <th scope="row">IVA faturado : média</th>
+                                <td>
+                                    <%= (blocks.iva_total/blocks.sales_total).toFixed(2) %>€
+                                </td>
+                            </tr>
+
+                            <!-- Lucro : total -->
+                            <tr>
+                                <th scope="row">Lucro : total</th>
+                                <td>
+                                    <%= (blocks.profit_total).toFixed(2) %>€
+                                </td>
+                            </tr>
+
+                            <!-- Lucro : médio -->
+                            <tr>
+                                <th scope="row">Lucro : média</th>
+                                <td>
+                                    <%= (blocks.profit_total/blocks.sales_total).toFixed(2) %>€
+                                </td>
+                            </tr>
+
+
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

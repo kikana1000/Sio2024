@@ -1,0 +1,189 @@
+<!-- Principais valores -->
+<div class="row">
+    <div class="row">
+        <div class="col">
+            <h6 class="text-uppercase"></h6>
+        </div>
+        <div class="col-auto">
+            <p class="text-muted" id="date"></p>
+
+            <script>
+                document.getElementById("date").innerHTML = new Date().toLocaleDateString(
+                    'pt-PT',
+                    {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric'
+                    });
+            </script>
+        </div>
+    </div>
+    <!-- Total Vendas -->
+    <div class="col-xl-6 col-md-12 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between p-md-1">
+                    <div class="d-flex flex-row">
+                        <div class="align-self-center">
+                            <h2 class="h1 mb-0 me-4">
+                                <%= blocks.gross_total.toFixed(2) %>€
+                            </h2>
+                        </div>
+                        <div>
+                            <h4>Total Faturação</h4>
+                            <p class="mb-0">
+                                <%= blocks.sales_total %> vendas
+                            </p>
+                        </div>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-wallet text-dark fa-3x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Total Vendas -->
+    <div class="col-xl-6 col-md-12 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between p-md-1">
+                    <div class="d-flex flex-row">
+                        <div class="align-self-center">
+                            <h2 class="h1 mb-0 me-4 text-danger">
+                                <%= blocks.profit_total.toFixed(2) %>€
+                            </h2>
+                        </div>
+                        <div>
+                            <h4 class="text-danger">Total Lucro</h4>
+                            <p class="mb-0">IVA incluído</p>
+                        </div>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-heart text-danger fa-3x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Mini blocos -->
+
+<div class="row">
+
+    <!-- IVA -->
+    <div class="col-xl-4 col-sm-6 col-12 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between px-md-1">
+                    <div>
+                        <h3 class="text-warning">
+                            <%= blocks.iva_total %>€
+                        </h3>
+                        <p class="mb-0">IVA</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-eur text-warning fa-3x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Média Faturação -->
+    <div class="col-xl-4 col-sm-6 col-12 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between px-md-1">
+                    <div>
+                        <h3 class="text-dark">
+                            <%= (blocks.gross_total/blocks.sales_total).toFixed(2) %>€
+                        </h3>
+                        <p class="mb-0"><small>Faturação média/venda</small></p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-calculator text-dark fa-3x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Média do Lucro -->
+    <div class="col-xl-4 col-sm-6 col-12 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between px-md-1">
+                    <div>
+                        <h3 class="text-danger">
+                            <%= (blocks.profit_total/blocks.sales_total).toFixed(2) %>€
+                        </h3>
+                        <p class="mb-0"><small>Lucro médio/venda</small></p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fa fa-line-chart text-danger fa-3x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Vendas -->
+    <div class="col-xl-4 col-sm-6 col-12 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between px-md-1">
+                    <div>
+                        <h3 class="text-dark">
+                            <%= blocks.sales_total %>
+                        </h3>
+                        <p class="mb-0">Vendas</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-file-text text-dark fa-3x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Customers -->
+    <div class="col-xl-4 col-sm-6 col-12 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between px-md-1">
+                    <div>
+                        <h3 class="text-success">
+                            <%= blocks.customers_billed %>
+                        </h3>
+                        <p class="mb-0">Clientes</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="far fa-user text-success fa-3x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Products -->
+    <div class="col-xl-4 col-sm-6 col-12 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between px-md-1">
+                    <div>
+                        <h3 class="text-info">
+                            <%= blocks.products_billed %>
+                        </h3>
+                        <p class="mb-0">Produtos</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-barcode text-info fa-3x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

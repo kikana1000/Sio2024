@@ -1,0 +1,130 @@
+<div class="row mb-4">
+    <div class="col-xl-12 col-sm-6 col-12 mb-4">
+        <div class="card">
+            <div class="card-body text-center mb-0 text-muted">
+                <div>
+                    <h6 class="card-title mb-0">Faturação</h6>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between px-md-1">
+                    <canvas id="gross_billed"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script id="gross_billed">
+    const months = [
+        "Janeiro",
+        "Fevereiro",
+        "Março",
+        "Abril",
+        "Maio",
+        "Junho",
+        "Julho",
+        "Agosto",
+        "Setembro",
+        "Outubro",
+        "Novembro",
+        "Dezembro"
+    ];
+    let labels = [];
+
+    // Labels / Gross and Net Totals
+    let gross_total = [];
+    let net_total = [];
+    <% chart.graph_data.forEach(function (item) { %>
+        labels.push(months[<%= item.attributes.month %> - 1]);
+        gross_total.push('<%= item.attributes.gross_total %>');
+        net_total.push('<%= item.attributes.net_total %>');
+    <% }); %>
+
+        // Gross and Net Cumulative
+        let gross_cumulative = [];
+    let net_cumulative = [];
+    <% chart.graph_cumulative.forEach(function (item) { %>
+        gross_cumulative.push('<%= item.cumulative_gross_total %>');
+        net_cumulative.push('<%= item.cumulative_net_total %>');
+    <% }); %>
+
+
+        // Gross and Net Average
+        let gross_average = [];
+    let net_average = [];
+    <% chart.graph_cumulative.forEach(function (item) { %>
+        gross_average.push('<%= (item.cumulative_gross_total / item.month).toFixed(2) %>');
+        net_average.push('<%= (item.cumulative_net_total / item.month).toFixed(2) %>');
+    <% }); %>
+
+
+    /*
+    *  Chart Gross Billed
+    */
+    var ctxL = document.getElementById("gross_billed").getContext('2d');
+    var myLineChart = new Chart(ctxL, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: "mensal",
+                    data: gross_total,
+                    backgroundColor: [
+                        'rgba(105, 0, 132, .2)',
+                    ],
+                    borderColor: [
+                        'rgba(200, 99, 132, .7)',
+                    ],
+                    borderWidth: 2,
+                },
+                {
+                    label: "acumulada",
+                    data: gross_cumulative,
+                    backgroundColor: [
+                        'rgba(0, 137, 132, .0)',
+                    ],
+                    borderColor: [
+                        'rgba(0, 10, 130, .7)',
+                    ],
+                    borderWidth: 2
+                },
+                {
+                    label: "média",
+                    data: gross_average,
+                    backgroundColor: [
+                        'rgba(0, 250, 220, .0)',
+                    ],
+                    borderColor: [
+                        'rgba(0, 213, 132, .7)',
+                    ],
+                    borderWidth: 2,
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                xAxes: [{
+                    scalesLabel: {
+                        labelString: 'meses',
+                        display: true,
+                    }
+                }],
+                yAxes: [{
+                    scaleLabel: {
+                        labelString: 'valor monetário bruto',
+                        display: true
+                    },
+                    ticks: {
+                        userCallback: function (tick) {
+                            return tick.toString() + '€';
+                        }
+                    },
+                }]
+            }
+        }
+    });
+
+</script>
